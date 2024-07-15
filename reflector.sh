@@ -15,7 +15,7 @@ if [ ! -f "$PROGRAM_PATH" ]; then
 fi
 
 # Define directory for logs
-LOG_DIR="${HOME}/debug_logs"
+LOG_DIR="${HOME}/reflectorlogs"
 mkdir -p "$LOG_DIR"
 
 # Define name of backup binary and new script
@@ -35,12 +35,13 @@ cat <<EOL > "$WRAPPER_SCRIPT"
 
 # log file location
 LOG_FILE="${LOG_DIR}/${PROGRAM_NAME}_log.txt"
-
+cwdir=$(pwd)
 mkdir -p "\$(dirname "\$LOG_FILE")"
 
 # date, command, and arguments
-echo "\$(date '+%Y-%m-%d %H:%M:%S') - arguments: \$@" >> "\$LOG_FILE"
-
+echo "\$(date '+%Y-%m-%d %H:%M:%S') - \$cwdir" >> "\$LOG_FILE"
+echo "arguments: \$@" >> "\$LOG_FILE"
+echo " " >> "\$LOG_FILE"
 # original executable with arguments
 exec "${BACKUP_BINARY}" "\$@"
 EOL
