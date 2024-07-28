@@ -15,7 +15,7 @@ if [ ! -f "$PROGRAM_PATH" ]; then
 fi
 
 # Define directory for logs
-LOG_DIR="${HOME}/reflectorlogs"
+LOG_DIR="~/reflectorlogs"
 mkdir -p "$LOG_DIR"
 
 # Define name of backup binary and new script

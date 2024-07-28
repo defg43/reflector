@@ -8,8 +8,5 @@ fi
 PROGRAM_NAME=$1
 PROGRAM_PATH=$(which "$PROGRAM_NAME")
 
-# rm "$PROGRAM_NAME"
-mv "${PROGRAM_NAME}_bin" "$PROGRAM_NAME"
-# rm "${PROGRAM_NAME}_bin"
-
+mv "${PROGRAM_PATH}_bin" "$PROGRAM_PATH"
 echo "Stopped reflector for '$PROGRAM_NAME'."
