@@ -15,7 +15,7 @@ if [ ! -f "$PROGRAM_PATH" ]; then
 fi
 
 # Define directory for logs
-LOG_DIR="~/reflectorlogs"
+LOG_DIR="${HOME}/reflectorlogs"
 mkdir -p "$LOG_DIR"
 
 # Define name of backup binary and new script
@@ -23,28 +23,29 @@ BACKUP_BINARY="${PROGRAM_PATH}_bin"
 WRAPPER_SCRIPT="${PROGRAM_PATH}"
 
 # Rename original binary to a backup
-cp "$PROGRAM_PATH" "$BACKUP_BINARY"
+sudo cp "$PROGRAM_PATH" "$BACKUP_BINARY"
 if [ $? -ne 0 ]; then
     echo "Error: Failed to create a backup of '$PROGRAM_NAME'."
     exit 1
 fi
 
-# Create new wrapper script
-cat <<EOL > "$WRAPPER_SCRIPT"
+# Create the new wrapper script using sudo bash -c
+sudo bash -c "cat << 'EOL' > \"$WRAPPER_SCRIPT\"
 #!/bin/bash
 
 # log file location
-LOG_FILE="${LOG_DIR}/${PROGRAM_NAME}_log.txt"
-cwdir=$(pwd)
-mkdir -p "\$(dirname "\$LOG_FILE")"
+LOG_FILE=\"$LOG_DIR/${PROGRAM_NAME}_log.txt\"
+CWD=\$(pwd)
+mkdir -p \"\$(dirname \"\$LOG_FILE\")\"
 
-# date, command, and arguments
-echo "\$(date '+%Y-%m-%d %H:%M:%S') - \$cwdir" >> "\$LOG_FILE"
-echo "arguments: \$@" >> "\$LOG_FILE"
-echo " " >> "\$LOG_FILE"
+# date, command, current directory, and arguments
+echo \"\$(date '+%Y-%m-%d %H:%M:%S') - \$CWD\" >> \"\$LOG_FILE\"
+echo \"arguments: \$@\" >> \"\$LOG_FILE\"
+echo \" \" >> \"\$LOG_FILE\"
+
 # original executable with arguments
-exec "${BACKUP_BINARY}" "\$@"
-EOL
+exec \"$BACKUP_BINARY\" \"\$@\"
+EOL"
 
-chmod +x "$WRAPPER_SCRIPT"
+sudo chmod +x "$WRAPPER_SCRIPT"
 echo "Reflector setup complete for '$PROGRAM_NAME'."
